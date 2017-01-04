@@ -36,6 +36,7 @@ Payments               = require("./resource/payments");
 PaymentsRefunds        = require("./resource/payments/refunds");
 Methods                = require("./resource/methods");
 Issuers                = require("./resource/issuers");
+Organizations          = require("./resource/organizations");
 Customers              = require("./resource/customers");
 CustomersPayments      = require("./resource/customers/payments");
 CustomersMandates      = require("./resource/customers/mandates");
@@ -48,13 +49,15 @@ module.exports = class Client
 		this.config = {
 			endpoint: "https://api.mollie.nl",
 			version: "v1",
-			key: "",
+			authorization: null,
+			profileId: null
 		};
 
 		this.payments                = new Payments(this);
 		this.payments_refunds        = new PaymentsRefunds(this);
 		this.methods                 = new Methods(this);
 		this.issuers                 = new Issuers(this);
+		this.organizations           = new Organizations(this);
 		this.customers               = new Customers(this);
 		this.customers_payments      = new CustomersPayments(this);
 		this.customers_mandates      = new CustomersMandates(this);
@@ -63,8 +66,11 @@ module.exports = class Client
 	setApiEndpoint: (endpoint) ->
 		this.config.endpoint = endpoint;
 
-	setApiKey: (key) ->
-		this.config.key = key;
+	setAuthorization: (authorization) ->
+		this.config.authorization = authorization;
+
+	setProfileId: (profileId) ->
+		this.config.profileId = profileId;
 
 	callRest: (method, resource, id, data, callback) ->
 		id = id || '';
@@ -74,7 +80,7 @@ module.exports = class Client
 		parsedUrl.rejectUnauthorized = true;
 		parsedUrl.cert               = fs.readFileSync(__dirname + "/cacert.pem");
 		parsedUrl.headers            = {
-			Authorization: "Bearer #{@config.key}",
+			Authorization: "Bearer #{@config.authorization}",
 			Accept: "application/json",
 			'User-Agent': "Mollie/#{@constructor.version} Node/#{process.version}"
 		};
@@ -90,6 +96,11 @@ module.exports = class Client
 				callback(JSON.parse(body))
 			);
 		);
+
+		if data
+			data.testmode = true
+			if this.config.profileId
+				data.profileId = this.config.profileId
 
 		request.write(JSON.stringify(data));
 		request.end();

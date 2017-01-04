@@ -1,6 +1,7 @@
 ###
   Example 4 - How to prepare an iDEAL payment with the Mollie API.
 ###
+Mollie = require("../lib/mollie");
 mollie = require("./mollie");
 querystring = require "querystring"
 fs = require "fs"
@@ -23,6 +24,7 @@ class example
           response.write '<form method="post">Select your bank: <select name="issuer">'
 
           for issuer in issuers
+            console.log(issuer)
             if issuer.method == Mollie.API.Object.Method.IDEAL
               response.write "<option value=\"#{_.escape(issuer.id)}\">#{_.escape(issuer.name)}</option>";
 
@@ -57,6 +59,7 @@ class example
       , (payment) =>
 
         if payment.error
+          console.error 'Payment failed with issuer ID: ' + @body.issuer
           console.error payment.error
           return response.end()
 

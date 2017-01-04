@@ -5,7 +5,9 @@
  */
 
 (function() {
-  var example, fs, mollie, querystring, _;
+  var Mollie, example, fs, mollie, querystring, _;
+
+  Mollie = require("../lib/mollie");
 
   mollie = require("./mollie");
 
@@ -40,6 +42,7 @@
               response.write('<form method="post">Select your bank: <select name="issuer">');
               for (_i = 0, _len = issuers.length; _i < _len; _i++) {
                 issuer = issuers[_i];
+                console.log(issuer);
                 if (issuer.method === Mollie.API.Object.Method.IDEAL) {
                   response.write("<option value=\"" + (_.escape(issuer.id)) + "\">" + (_.escape(issuer.name)) + "</option>");
                 }
@@ -77,6 +80,7 @@
             issuer: _this.body.issuer || null
           }, function(payment) {
             if (payment.error) {
+              console.error('Payment failed with issuer ID: ' + _this.body.issuer);
               console.error(payment.error);
               return response.end();
             }
