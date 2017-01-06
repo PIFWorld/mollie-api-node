@@ -1,14 +1,11 @@
 ###
-	Example 15 - How to read organization in the Mollie API.
+	Example 16 - How to read organization in the Mollie API.
 ###
 mollie = require("./mollie");
 fs     = require("fs");
 
 class example
 	constructor: (request, response) ->
-		###
-			See: https://www.mollie.com/en/docs/reference/customers/create
-		###
 		mollie.organizations.get "me"
 		, (organization) =>
 			if (organization.error)

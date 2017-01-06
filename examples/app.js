@@ -42,6 +42,7 @@
       response.write('<a href="./14-recurring-first-payment" target="_blank">Try example 14</a><br>');
       response.write('<a href="./15-recurring-payment" target="_blank">Try example 15</a><br>');
       response.write('<a href="./16-read-organization" target="_blank">Try read organization</a><br>');
+      response.write('<a href="./17-read-payments" target="_blank">Try read payments list</a><br>');
       return response.end();
     }
   });

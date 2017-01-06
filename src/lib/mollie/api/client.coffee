@@ -28,15 +28,17 @@
   @copyright   Mollie B.V.
   @link        https://www.mollie.nl
 ###
-url   = require("url");
-fs    = require("fs");
-https = require("https");
+url         = require("url");
+querystring = require("querystring");
+fs          = require("fs");
+https       = require("https");
 
 Payments               = require("./resource/payments");
 PaymentsRefunds        = require("./resource/payments/refunds");
 Methods                = require("./resource/methods");
 Issuers                = require("./resource/issuers");
 Organizations          = require("./resource/organizations");
+Profiles               = require("./resource/profiles");
 Customers              = require("./resource/customers");
 CustomersPayments      = require("./resource/customers/payments");
 CustomersMandates      = require("./resource/customers/mandates");
@@ -58,6 +60,7 @@ module.exports = class Client
 		this.methods                 = new Methods(this);
 		this.issuers                 = new Issuers(this);
 		this.organizations           = new Organizations(this);
+		this.profiles                = new Profiles(this);
 		this.customers               = new Customers(this);
 		this.customers_payments      = new CustomersPayments(this);
 		this.customers_mandates      = new CustomersMandates(this);
@@ -72,6 +75,9 @@ module.exports = class Client
 	setProfileId: (profileId) ->
 		this.config.profileId = profileId;
 
+	setTestMode: (testMode) ->
+		this.config.testMode = testMode;
+
 	callRest: (method, resource, id, data, callback) ->
 		id = id || '';
 
@@ -84,6 +90,11 @@ module.exports = class Client
 			Accept: "application/json",
 			'User-Agent': "Mollie/#{@constructor.version} Node/#{process.version}"
 		};
+		if (this.config.profileId)
+			addToQueryString(parsedUrl, "profileId", this.config.profileId)
+
+		if (this.config.testMode)
+			addToQueryString(parsedUrl, "testmode", this.config.testMode)
 
 		request = https.request(parsedUrl);
 
@@ -97,10 +108,11 @@ module.exports = class Client
 			);
 		);
 
-		if data
-			data.testmode = true
-			if this.config.profileId
-				data.profileId = this.config.profileId
-
 		request.write(JSON.stringify(data));
 		request.end();
+
+addToQueryString = (url, key, value) ->
+	if (!url.query)
+		url.query = {}
+	url.query[key] = value
+	url.path = url.pathname + "?" + querystring.stringify(url.query)

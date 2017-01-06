@@ -11,6 +11,7 @@ module.exports = {
 			Mandate: require("./mollie/api/object/mandate"),
 			Subscription: require("./mollie/api/object/subscription"),
 			Organization: require("./mollie/api/object/organization"),
+			Profile: require("./mollie/api/object/profile"),
 		},
 		Resource: {
 			Base: require("./mollie/api/resource/base"),
@@ -20,6 +21,7 @@ module.exports = {
 			Issuers: require("./mollie/api/resource/issuers"),
 			Customers: require("./mollie/api/resource/customers"),
 			Organizations: require("./mollie/api/resource/organizations"),
+			Profiles: require("./mollie/api/resource/profiles"),
 			CustomersPayments: require("./mollie/api/resource/customers/payments"),
 			CustomersMandates: require("./mollie/api/resource/customers/mandates"),
 			CustomersSubscriptions: require("./mollie/api/resource/customers/subscriptions"),
