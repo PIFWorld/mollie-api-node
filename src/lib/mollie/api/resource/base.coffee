@@ -28,6 +28,7 @@
   @copyright   Mollie B.V.
   @link        https://www.mollie.nl
 ###
+querystring = require("querystring");
 List = require("../object/list");
 
 module.exports = class Base
@@ -47,7 +48,7 @@ module.exports = class Base
 
 	create: (data, callback) ->
 		this.api.callRest(
-			"POST", this.getResourceName(), null, data, (body) =>
+			"POST", this.getResourceName(), null, data, null, (body) =>
 				if (body.error)
 					return callback(body);
 				callback(this.copy(body, new this.constructor.object));
@@ -55,7 +56,7 @@ module.exports = class Base
 
 	get: (id, callback) ->
 		this.api.callRest(
-			"GET", this.getResourceName(), id, null, (body) =>
+			"GET", this.getResourceName(), id, null, null, (body) =>
 				if (body.error)
 					return callback(body);
 				callback(this.copy(body, new this.constructor.object));
@@ -63,7 +64,7 @@ module.exports = class Base
 
 	update: (id, data, callback) ->
 		this.api.callRest(
-			"POST", this.getResourceName(), id, data, (body) =>
+			"POST", this.getResourceName(), id, data, null, (body) =>
 				if (body.error)
 					return callback(body);
 				callback(this.copy(body, new this.constructor.object));
@@ -71,7 +72,7 @@ module.exports = class Base
 
 	delete: (id, callback) ->
 		this.api.callRest(
-			"DELETE", this.getResourceName(), id, null, (body) =>
+			"DELETE", this.getResourceName(), id, null, null, (body) =>
 				if (body.error)
 					return callback(body);
 				callback(this.copy(body, new this.constructor.object));
@@ -80,9 +81,9 @@ module.exports = class Base
 	cancel: (id, callback) ->
 		this.delete(id, callback);
 
-	all: (callback, data = null) ->
+	all: (query = null, callback) ->
 		this.api.callRest(
-			"GET", this.getResourceName(), null, data, (body) =>
+			"GET", this.getResourceName(), null, null, query, (body) =>
 				if (body.error)
 					return callback(body);
 

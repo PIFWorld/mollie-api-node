@@ -78,7 +78,7 @@ module.exports = class Client
 	setTestMode: (testMode) ->
 		this.config.testMode = testMode;
 
-	callRest: (method, resource, id, data, callback) ->
+	callRest: (method, resource, id, data, query, callback) ->
 		id = id || '';
 
 		parsedUrl = url.parse("#{@config.endpoint}/#{@config.version}/#{resource}/#{id}");
@@ -95,6 +95,10 @@ module.exports = class Client
 
 		if (this.config.testMode)
 			addToQueryString(parsedUrl, "testmode", this.config.testMode)
+
+		if (query)
+			for key of query
+				addToQueryString(parsedUrl, key, query[key])
 
 		request = https.request(parsedUrl);
 
