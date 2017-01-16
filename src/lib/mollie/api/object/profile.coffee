@@ -15,4 +15,4 @@ module.exports = class Profile
     this.links           = null;
 
   isValid: () ->
-    return this.status == "verified" && this.review == null;
+    return this.status == "verified" && !this.review;
